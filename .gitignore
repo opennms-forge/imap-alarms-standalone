@@ -1,0 +1,7 @@
+*.iws
+*.iml
+*.ipr
+target/
+.DS_Store
+.idea/
+imap-alarms-standalone.properties
