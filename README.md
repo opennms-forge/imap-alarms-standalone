@@ -8,7 +8,7 @@ It is recommended to configure the eMail-Client for this account to not use a tr
 
 The project has some dependencies to OpenNMS artifacts and can be build with maven:
 
-$ mvn install
+    $ mvn install
 
 ## Running
 
