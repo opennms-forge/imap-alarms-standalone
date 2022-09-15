@@ -12,7 +12,7 @@ import org.opennms.netmgt.model.OnmsAlarm;
 import com.icegreen.greenmail.store.FolderListener;
 
 public class ImapAlarmsFolderListener implements FolderListener {
-    private ImapAlarms imapAlarms;
+    private final ImapAlarms imapAlarms;
 
     public ImapAlarmsFolderListener(final ImapAlarms imapAlarms) {
         this.imapAlarms = imapAlarms;
@@ -21,7 +21,7 @@ public class ImapAlarmsFolderListener implements FolderListener {
     @Override
     public void expunged(final int msn) {
         final Set<Long> existingUids = Arrays.stream(imapAlarms.getInbox().getMessageUids()).boxed().collect(Collectors.toSet());
-        for (Map.Entry<Integer, Long> entry : imapAlarms.getAlarmUidMap().entrySet()) {
+        for (final Map.Entry<Integer, Long> entry : imapAlarms.getAlarmUidMap().entrySet()) {
             if (!existingUids.contains(entry.getValue())) {
                 if (imapAlarms.isVerbose()) {
                     System.out.println("EXPUNGED: Message '" + imapAlarms.clean(imapAlarms.getAlarmForAlarmId(entry.getKey()).getLogMsg()) + "' -> Clearing Alarm");

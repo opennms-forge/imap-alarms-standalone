@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -68,7 +67,7 @@ public class ImapAlarms {
     @Option(required = false, name = "--imap-password", usage = "Password for accessing OpenNMS IMAP alarms.")
     private String imapPassword = "secret";
 
-    @Option(required = false, name = "--imap-email", usage = "EMail for accessing OpenNMS IMAP alarms.")
+    @Option(required = false, name = "--imap-email", usage = "E-Mail address for accessing OpenNMS IMAP alarms.")
     private String imapEmail = "imap-alarms@opennms.org";
 
     @Option(required = false, name = "--verbose", usage = "Verbose output.")
@@ -99,7 +98,6 @@ public class ImapAlarms {
     void clearAlarm(final int alarmId) {
         final Form form = new Form();
         form.param("clear", "true");
-
         client.target(url).path("/rest/alarms/" + alarmId)
                 .request().put(Entity.form(form));
     }
@@ -107,7 +105,6 @@ public class ImapAlarms {
     void acknowledgeAlarm(final int alarmId) {
         final Form form = new Form();
         form.param("ack", "true");
-
         client.target(url).path("/rest/alarms/" + alarmId)
                 .request().put(Entity.form(form));
     }
@@ -115,7 +112,6 @@ public class ImapAlarms {
     void unacknowledgeAlarm(final int alarmId) {
         final Form form = new Form();
         form.param("ack", "false");
-
         client.target(url).path("/rest/alarms/" + alarmId)
                 .request().put(Entity.form(form));
     }
@@ -237,10 +233,6 @@ public class ImapAlarms {
         }
     }
 
-    String clean(final String string) {
-        return string.replaceAll("\\r|\\n", "").trim();
-    }
-
     private void updateAlarms() {
         final Map<Integer, OnmsAlarm> newAlarmMap = getUnclearedAlarms().getObjects().stream().collect(Collectors.toMap(OnmsAlarm::getId, Function.identity()));
 
@@ -346,11 +338,6 @@ public class ImapAlarms {
         }
     }
 
-    public static void main(String[] args) {
-        final ImapAlarms imapAlarms = new ImapAlarms();
-        imapAlarms.execute(args);
-    }
-
     MailFolder getInbox() {
         return inbox;
     }
@@ -388,5 +375,14 @@ public class ImapAlarms {
 
     Map<Integer, Long> getAlarmUidMap() {
         return alarmUidMap;
+    }
+
+    String clean(final String string) {
+        return string.replaceAll("\\r|\\n", "").trim();
+    }
+
+    public static void main(String[] args) {
+        final ImapAlarms imapAlarms = new ImapAlarms();
+        imapAlarms.execute(args);
     }
 }
