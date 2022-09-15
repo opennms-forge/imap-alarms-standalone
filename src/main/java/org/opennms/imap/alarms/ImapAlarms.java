@@ -73,6 +73,12 @@ public class ImapAlarms {
     @Option(required = false, name = "--verbose", usage = "Verbose output.")
     private Boolean verbose = false;
 
+    @Option(required = false, name = "--keystore", usage = "Keystore file to use.")
+    private String keystore = null;
+
+    @Option(required = false, name = "--keystore-password", usage = "Password for keystore file.")
+    private String keystorePassword = null;
+
     @Option(required = false, name = "--delay", usage = "Update delay in seconds.")
     private int delay = 15;
 
@@ -186,6 +192,17 @@ public class ImapAlarms {
         this.client = ClientBuilder.newClient(
                 new ClientConfig(jacksonJsonProvider)
         ).register(httpAuthenticationFeature);
+
+        if (keystore != null) {
+            System.setProperty("greenmail.tls.keystore.file", keystore);
+
+            if (keystorePassword != null) {
+                System.setProperty("greenmail.tls.keystore.password", keystorePassword);
+            } else {
+                System.err.println("You need to also specify the keystore password.");
+                return;
+            }
+        }
 
         startImapServer();
     }
